@@ -1,0 +1,35 @@
+# v0 runtime files (should only exist in preview, not in git)
+__v0_runtime_loader.js
+__v0_devtools.tsx
+__v0_jsx-dev-runtime.ts
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs and caches
+.next/
+.turbo/
+out/
+dist/
+
+# Environment files
+.env
+.env.*
+.env*.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Test artifacts
+playwright-report/
+test-results/
+.playwright/
+
+# Local IDE/system files
+.cursor/
+.DS_Store
