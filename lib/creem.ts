@@ -6,5 +6,5 @@ if (!process.env.CREEM_API_KEY) {
 
 export const creem = createCreem({
   apiKey: process.env.CREEM_API_KEY,
-  testMode: process.env.NODE_ENV !== 'production',
+  testMode: process.env.NODE_ENV !== 'production' || process.env.NEXT_PUBLIC_CREEM_TEST_MODE === 'true',
 })

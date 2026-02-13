@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,30 +27,65 @@ export async function POST(request: NextRequest) {
     const event = JSON.parse(body)
 
     // Handle different webhook events
+    const supabaseAdmin = createAdminClient()
+
     switch (event.type) {
-      case 'checkout.completed':
-        console.log('Payment successful:', {
-          checkoutId: event.data.id,
-          customerId: event.data.customer,
-          productId: event.data.product,
-        })
-        // TODO: Grant access to user, send confirmation email
+      case 'checkout.completed': {
+        const { customer_email, client_reference_id, subscription_id, mode } = event.data
+        // Assuming client_reference_id is the user ID passed from checkout session creation
+        const userId = client_reference_id
+
+        if (userId) {
+          // Example plan mapping - adjust based on your actual product logic
+          let wordLimit = 10000 // Starter
+          let planName = 'starter'
+
+          // You might want to fetch product details to determine the plan
+          // For now, we'll default to updating the subscription ID and status
+
+          const { error } = await supabaseAdmin
+            .from('profiles')
+            .update({
+              status: 'active',
+              plan: planName,
+              subscription_id: subscription_id,
+              word_limit: wordLimit,
+              current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // approx 1 month
+            })
+            .eq('id', userId)
+
+          if (error) console.error('Error updating profile:', error)
+        }
         break
+      }
 
       case 'subscription.created':
-        console.log('New subscription:', event.data)
-        // TODO: Activate subscription for user
+        // Usually handled by checkout.completed, but good for redundancy
         break
 
-      case 'subscription.canceled':
-        console.log('Subscription canceled:', event.data)
-        // TODO: Revoke access
-        break
+      case 'subscription.canceled': {
+        const subscriptionId = event.data.id
+        const { error } = await supabaseAdmin
+          .from('profiles')
+          .update({ status: 'canceled' })
+          .eq('subscription_id', subscriptionId)
 
-      case 'subscription.updated':
-        console.log('Subscription updated:', event.data)
-        // TODO: Update user's plan
+        if (error) console.error('Error canceling subscription:', error)
         break
+      }
+
+      case 'subscription.updated': {
+        const subscriptionId = event.data.id
+        const status = event.data.status
+        // Update usage period or status
+        const { error } = await supabaseAdmin
+          .from('profiles')
+          .update({ status: status })
+          .eq('subscription_id', subscriptionId)
+
+        if (error) console.error('Error updating subscription:', error)
+        break
+      }
 
       default:
         console.log('Unhandled event type:', event.type)

@@ -29,7 +29,7 @@ export function Footer() {
             <ul className="flex flex-col gap-2">
               <li>
                 <a
-                  href="/"
+                  href="/ai-humanizer"
                   className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   AI Humanizer
@@ -37,7 +37,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="/#features"
+                  href="/bypass-gptzero"
                   className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   Bypass GPTZero
@@ -45,7 +45,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="/#features"
+                  href="/bypass-turnitin"
                   className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   Bypass Turnitin
@@ -53,7 +53,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="/#features"
+                  href="/bypass-originality-ai"
                   className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   Bypass Originality.ai

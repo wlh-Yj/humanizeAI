@@ -83,7 +83,7 @@ function ContactContent() {
               <div className="lg:col-span-2">
                 <div className="rounded-2xl border border-border bg-card p-8">
                   <h2 className="mb-6 text-2xl font-bold">Frequently Asked Questions</h2>
-                  
+
                   <div className="space-y-6">
                     <div>
                       <h3 className="mb-2 font-semibold">How quickly will I receive a response?</h3>
@@ -143,7 +143,7 @@ function ContactContent() {
                 <p className="mb-4 text-sm text-muted-foreground">
                   Browse our comprehensive guides and tutorials to get the most out of humanizeAI.
                 </p>
-                <a href="#" className="text-sm text-primary hover:underline">
+                <a href="/docs" className="text-sm text-primary hover:underline">
                   View Documentation →
                 </a>
               </div>

@@ -16,12 +16,17 @@ import {
 
 const SAMPLE_TEXT = `Artificial intelligence has revolutionized the way we approach problem-solving in the modern era. The integration of machine learning algorithms into various industries has led to unprecedented advancements in efficiency and productivity. Furthermore, the development of natural language processing capabilities has enabled more intuitive human-computer interactions, facilitating seamless communication between users and AI systems.`
 
-export function HeroSection() {
+interface HeroSectionProps {
+  initialMode?: string
+  title?: string
+}
+
+export function HeroSection({ initialMode = "GPTZero", title }: HeroSectionProps) {
   const { t } = useI18n()
   const [inputText, setInputText] = useState("")
   const [outputText, setOutputText] = useState("")
   const [isProcessing, setIsProcessing] = useState(false)
-  const [mode, setMode] = useState("GPTZero")
+  const [mode, setMode] = useState(initialMode)
   const [fluency, setFluency] = useState("High")
   const [readability, setReadability] = useState("University")
   const [undetectable, setUndetectable] = useState("Standard")
@@ -110,20 +115,24 @@ export function HeroSection() {
       <div className="relative mx-auto max-w-7xl px-6">
         <div className="mx-auto mb-12 max-w-3xl text-center lg:mb-16">
           <h1 className="text-balance font-display text-4xl font-bold tracking-tight text-foreground md:text-5xl lg:text-6xl">
-            {t("hero.title")}{" "}
-            <span className="bg-gradient-to-r from-primary to-[hsl(180_70%_40%)] bg-clip-text text-transparent">
-              {t("hero.titleHighlight")}
-            </span>
+            {title ? title : (
+              <>
+                {t("hero.title")}{" "}
+                <span className="bg-gradient-to-r from-primary to-[hsl(180_70%_40%)] bg-clip-text text-transparent">
+                  {t("hero.titleHighlight")}
+                </span>
+              </>
+            )}
           </h1>
           <p className="mt-6 text-pretty text-lg leading-relaxed text-muted-foreground">
             {t("hero.subtitle")}
           </p>
-          
+
           {/* Academic Integrity Notice */}
           <div className="mx-auto mt-6 max-w-2xl rounded-lg border border-amber-200 bg-amber-50 p-4 text-left dark:border-amber-900 dark:bg-amber-950">
             <p className="text-sm leading-relaxed text-amber-900 dark:text-amber-100">
-              <strong>⚠️ Important:</strong> This tool is designed for content improvement and writing assistance. 
-              Do not use it for academic dishonesty, plagiarism, or any unethical purposes. 
+              <strong>⚠️ Important:</strong> This tool is designed for content improvement and writing assistance.
+              Do not use it for academic dishonesty, plagiarism, or any unethical purposes.
               Always follow your institution's academic integrity policies.
             </p>
           </div>

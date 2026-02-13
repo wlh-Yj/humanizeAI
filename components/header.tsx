@@ -71,7 +71,7 @@ export function Header() {
   const navItems: NavItem[] = [
     { key: "nav.humanize", href: "/", icon: Bot },
     { key: "nav.pricing", href: "/pricing", icon: DollarSign },
-    { key: "nav.settings", href: "/settings", icon: Settings },
+    ...(user ? [{ key: "nav.settings", href: "/settings", icon: Settings }] : []),
   ]
 
   const toggleLocale = () => {
@@ -95,8 +95,8 @@ export function Header() {
               href={item.href}
               className={cn(
                 "flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all",
-                pathname === item.href 
-                  ? "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md shadow-sky-500/30" 
+                pathname === item.href
+                  ? "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md shadow-sky-500/30"
                   : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
               )}
             >
@@ -110,9 +110,9 @@ export function Header() {
           {/* Language Switcher */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="h-9 gap-2 rounded-lg border-border/40 hover:border-border"
               >
                 <Globe className="h-4 w-4" />
@@ -120,14 +120,14 @@ export function Header() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-[140px]">
-              <DropdownMenuItem 
+              <DropdownMenuItem
                 onClick={() => setLocale("en")}
                 className={locale === "en" ? "bg-accent" : ""}
               >
                 <span className="mr-2">🇺🇸</span>
                 English
               </DropdownMenuItem>
-              <DropdownMenuItem 
+              <DropdownMenuItem
                 onClick={() => setLocale("zh")}
                 className={locale === "zh" ? "bg-accent" : ""}
               >
@@ -139,13 +139,13 @@ export function Header() {
 
           {/* User Menu */}
           {loading ? (
-            <div className="h-9 w-24 animate-pulse rounded-lg bg-secondary" />
+            <div className="h-9 w-9 animate-pulse rounded-lg bg-secondary lg:w-24" />
           ) : user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
+                <Button
+                  variant="ghost"
+                  size="sm"
                   className="h-9 gap-2 rounded-lg hover:bg-accent"
                 >
                   {user.user_metadata.avatar_url ? (
@@ -176,9 +176,9 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button 
-              onClick={handleLogin} 
-              size="sm" 
+            <Button
+              onClick={handleLogin}
+              size="sm"
               className="h-9 gap-2 rounded-lg bg-gradient-to-r from-sky-500 to-blue-600 shadow-md hover:shadow-lg transition-all"
             >
               <LogIn className="h-4 w-4" />
@@ -206,8 +206,8 @@ export function Header() {
                 onClick={() => setMobileOpen(false)}
                 className={cn(
                   "flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all",
-                  pathname === item.href 
-                    ? "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md" 
+                  pathname === item.href
+                    ? "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
                     : "text-muted-foreground hover:bg-accent hover:text-foreground"
                 )}
               >
@@ -229,7 +229,7 @@ export function Header() {
                   {locale === "en" ? "Switch to 中文" : "Switch to EN"}
                 </span>
               </button>
-              
+
               {/* User Actions */}
               {user ? (
                 <div className="flex flex-col gap-2">
@@ -254,10 +254,10 @@ export function Header() {
                       </p>
                     </div>
                   </div>
-                  <Button 
-                    onClick={handleLogout} 
-                    size="sm" 
-                    variant="outline" 
+                  <Button
+                    onClick={handleLogout}
+                    size="sm"
+                    variant="outline"
                     className="w-full gap-2 border-destructive/50 text-destructive hover:bg-destructive hover:text-destructive-foreground"
                   >
                     <LogOut className="h-4 w-4" />
@@ -265,9 +265,9 @@ export function Header() {
                   </Button>
                 </div>
               ) : (
-                <Button 
-                  onClick={handleLogin} 
-                  size="sm" 
+                <Button
+                  onClick={handleLogin}
+                  size="sm"
                   className="w-full gap-2 bg-gradient-to-r from-sky-500 to-blue-600 shadow-md"
                 >
                   <LogIn className="h-4 w-4" />

@@ -3,6 +3,8 @@
 import { useI18n } from "@/lib/i18n"
 
 export function TestimonialsSection() {
+  return null
+  /*
   const { t, locale } = useI18n()
 
   return (
@@ -16,7 +18,12 @@ export function TestimonialsSection() {
             {t("testimonials.subtitle")}
           </p>
         </div>
-        <div className="mx-auto max-w-2xl rounded-2xl border border-border bg-background p-6 text-center shadow-sm">
+        <div className="mx-auto max-w-2xl rounded-2xl border border-dashed border-border bg-background/50 p-8 text-center">
+          <div className="mb-4 flex justify-center">
+            <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+              Coming Soon
+            </span>
+          </div>
           <p className="text-sm leading-relaxed text-muted-foreground">
             {locale === "zh"
               ? "我们正在收集真实用户反馈，稍后将展示经过审核的评价内容。"
@@ -26,4 +33,5 @@ export function TestimonialsSection() {
       </div>
     </section>
   )
+  */
 }
