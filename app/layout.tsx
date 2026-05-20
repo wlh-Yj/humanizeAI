@@ -1,21 +1,10 @@
 import React from "react"
 import type { Metadata, Viewport } from "next"
-import { Inter, Space_Grotesk } from "next/font/google"
 
 import "./globals.css"
 
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
 const githubRepoUrl = "https://github.com/wlh-Yj/humanizeAI.git"
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-})
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-space-grotesk",
-})
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -75,9 +64,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body
-        className={`${inter.variable} ${spaceGrotesk.variable} font-sans antialiased`}
-      >
+      <body className="font-sans antialiased">
         {children}
       </body>
     </html>

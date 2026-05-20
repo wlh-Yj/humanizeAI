@@ -2,11 +2,10 @@
 
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { motion } from "framer-motion"
-import { Bot, FileText, Layout, Settings, LogIn, LogOut, User, Menu, X, Globe, DollarSign } from "lucide-react"
+import { Bot, Settings, LogIn, LogOut, User, Menu, X, Globe, DollarSign } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 
-import { useI18n } from "@/lib/i18n"
+import { useI18n, type TranslationKey } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -21,7 +20,7 @@ import { User as SupabaseUser } from "@supabase/supabase-js"
 import { HumanizeIcon } from "@/components/humanize-icon"
 
 interface NavItem {
-  key: string
+  key: TranslationKey
   href: string
   icon: LucideIcon
 }
@@ -71,7 +70,7 @@ export function Header() {
   const navItems: NavItem[] = [
     { key: "nav.humanize", href: "/", icon: Bot },
     { key: "nav.pricing", href: "/pricing", icon: DollarSign },
-    ...(user ? [{ key: "nav.settings", href: "/settings", icon: Settings }] : []),
+    { key: "nav.settings", href: "/settings", icon: Settings },
   ]
 
   const toggleLocale = () => {
@@ -139,7 +138,7 @@ export function Header() {
 
           {/* User Menu */}
           {loading ? (
-            <div className="h-9 w-9 animate-pulse rounded-lg bg-secondary lg:w-24" />
+            <div className="h-9 w-24 animate-pulse rounded-lg bg-secondary" />
           ) : user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

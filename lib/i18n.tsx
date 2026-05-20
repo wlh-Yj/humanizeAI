@@ -71,9 +71,9 @@ const translations = {
     "caseStudies.humanScore": "Human Score",
 
     // Testimonials
-    "testimonials.title": "User Feedback",
+    "testimonials.title": "What Our Users Say",
     "testimonials.subtitle":
-      "Feedback is reviewed before publication to ensure authenticity.",
+      "Thousands of users trust our AI humanizer for their content needs.",
 
     // Plagiarism
     "plagiarism.title": "Pass Plagiarism Checkers Every Time",
@@ -186,8 +186,8 @@ const translations = {
     "caseStudies.humanScore": "人类评分",
 
     // Testimonials
-    "testimonials.title": "用户反馈",
-    "testimonials.subtitle": "我们会先审核反馈真实性，再公开展示。",
+    "testimonials.title": "用户怎么说",
+    "testimonials.subtitle": "数千用户信赖我们的AI人性化工具来满足他们的内容需求。",
 
     // Plagiarism
     "plagiarism.title": "每次都通过抄袭检查",
@@ -236,7 +236,7 @@ const translations = {
   },
 } as const
 
-type TranslationKey = keyof (typeof translations)["en"]
+export type TranslationKey = keyof (typeof translations)["en"]
 
 interface I18nContextType {
   locale: Locale

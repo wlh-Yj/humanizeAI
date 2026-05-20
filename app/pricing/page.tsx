@@ -27,7 +27,7 @@ const plans = [
   },
   {
     id: "pro",
-    productId: process.env.NEXT_PUBLIC_CREEM_PRO_PRODUCT_ID || "prod_pro_plan",
+    productId: process.env.NEXT_PUBLIC_CREEM_PRO_PRODUCT_ID || "",
     name: "Pro",
     price: "$19",
     period: "/month",
@@ -47,7 +47,7 @@ const plans = [
   },
   {
     id: "enterprise",
-    productId: process.env.NEXT_PUBLIC_CREEM_ENTERPRISE_PRODUCT_ID || "prod_enterprise_plan",
+    productId: process.env.NEXT_PUBLIC_CREEM_ENTERPRISE_PRODUCT_ID || "",
     name: "Enterprise",
     price: "$99",
     period: "/month",

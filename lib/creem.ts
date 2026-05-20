@@ -1,10 +1,15 @@
 import { createCreem } from 'creem_io'
 
-if (!process.env.CREEM_API_KEY) {
-  throw new Error('Missing CREEM_API_KEY environment variable')
-}
+export function getCreemClient() {
+  const apiKey = process.env.CREEM_API_KEY
 
-export const creem = createCreem({
-  apiKey: process.env.CREEM_API_KEY,
-  testMode: process.env.NODE_ENV !== 'production' || process.env.NEXT_PUBLIC_CREEM_TEST_MODE === 'true',
-})
+  if (!apiKey) {
+    throw new Error('Missing CREEM_API_KEY environment variable')
+  }
+
+  return createCreem({
+    apiKey,
+    webhookSecret: process.env.CREEM_WEBHOOK_SECRET,
+    testMode: process.env.NODE_ENV !== 'production',
+  })
+}

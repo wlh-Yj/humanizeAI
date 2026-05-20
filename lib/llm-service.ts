@@ -57,9 +57,11 @@ export interface HumanizeOptions {
 }
 
 export class HumanizerService {
-    private openai: OpenAI
+    private openai: OpenAI | null = null
+    private apiKey: string | null = null
+    private baseURL: string | null = null
 
-    constructor() {
+    private getClient() {
         const apiKey = process.env.AI_API_KEY
         const baseURL = process.env.AI_BASE_URL || 'https://api.openai.com/v1'
 
@@ -67,6 +69,12 @@ export class HumanizerService {
             throw new Error('Missing AI_API_KEY environment variable')
         }
 
+        if (this.openai && this.apiKey === apiKey && this.baseURL === baseURL) {
+            return this.openai
+        }
+
+        this.apiKey = apiKey
+        this.baseURL = baseURL
         this.openai = new OpenAI({
             apiKey,
             baseURL,
@@ -75,10 +83,13 @@ export class HumanizerService {
                 'X-Title': 'Humanize',
             },
         })
+
+        return this.openai
     }
 
     async humanize(text: string, options: HumanizeOptions = {}): Promise<string> {
         try {
+            const openai = this.getClient()
             let systemPrompt = PROMPTS[options.mode as keyof typeof PROMPTS] || PROMPTS["Standard"]
 
             // Append instructions based on advanced parameters
@@ -100,18 +111,21 @@ export class HumanizerService {
                 if (options.undetectable === "Ultimate") systemPrompt += "\n- **Undetectable**: MAXIMIZE entropy and structural variance. Prioritize bypassing detection above all else, even if flow is slightly compromised."
             }
 
-            const completion = await this.openai.chat.completions.create({
+            const completion = await openai.chat.completions.create({
                 model: options.model || DEFAULT_MODEL,
                 messages: [
                     { role: "system", content: systemPrompt },
                     { role: "user", content: text },
                 ],
-                temperature: options.temperature || 0.7,
+                temperature: options.temperature ?? 0.7,
             })
 
             return completion.choices[0].message.content || ""
         } catch (error) {
             console.error("LLM Service Error:", error)
+            if (error instanceof Error && error.message === 'Missing AI_API_KEY environment variable') {
+                throw error
+            }
             throw new Error("Failed to humanize text")
         }
     }

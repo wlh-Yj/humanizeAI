@@ -29,6 +29,8 @@ pnpm-debug.log*
 playwright-report/
 test-results/
 .playwright/
+test-screenshots/
+*.tsbuildinfo
 
 # Local IDE/system files
 .cursor/

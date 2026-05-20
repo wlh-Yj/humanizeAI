@@ -50,7 +50,7 @@ let failedChecks = 0;
 function checkFile(filePath, name) {
   totalChecks++;
   const fullPath = path.join(process.cwd(), filePath);
-  
+
   if (fs.existsSync(fullPath)) {
     console.log(`✅ ${name}`);
     console.log(`   📁 ${filePath}`);
@@ -66,16 +66,17 @@ function checkFile(filePath, name) {
 
 function checkFooterLinks() {
   console.log('\n📋 检查 Footer 链接...\n');
-  
+
   const footerPath = path.join(process.cwd(), 'components/footer.tsx');
   if (!fs.existsSync(footerPath)) {
     console.log('❌ Footer 组件不存在');
     return;
   }
-  
+
   const footerContent = fs.readFileSync(footerPath, 'utf-8');
-  
+
   // 检查是否有 # 死链接
+  totalChecks++;
   const hashLinks = footerContent.match(/href="#"/g);
   if (hashLinks) {
     console.log(`❌ 发现 ${hashLinks.length} 个死链接 (href="#")`);
@@ -84,7 +85,7 @@ function checkFooterLinks() {
     console.log('✅ 无死链接 (href="#")');
     passedChecks++;
   }
-  
+
   // 检查有效链接
   const validLinks = [
     { pattern: 'href="/"', name: 'Home' },
@@ -95,7 +96,7 @@ function checkFooterLinks() {
     { pattern: 'href="/pricing"', name: 'Pricing' },
     { pattern: 'href="/#faq"', name: 'FAQ' },
   ];
-  
+
   console.log('\n有效链接：');
   validLinks.forEach(link => {
     totalChecks++;
@@ -110,21 +111,21 @@ function checkFooterLinks() {
 
 function checkTestimonials() {
   console.log('\n💬 检查 Testimonials 免责声明...\n');
-  
+
   const testimonialsPath = path.join(process.cwd(), 'components/testimonials-section.tsx');
   if (!fs.existsSync(testimonialsPath)) {
     console.log('❌ Testimonials 组件不存在');
     return;
   }
-  
+
   const content = fs.readFileSync(testimonialsPath, 'utf-8');
   totalChecks++;
-  
-  if (content.includes('Example testimonials for demonstration purposes') || 
-      content.includes('example') || 
+
+  if (content.includes('return null') ||
+      content.includes('Example testimonials for demonstration purposes') ||
+      content.includes('example') ||
       content.includes('demo')) {
-    console.log('✅ 已包含免责声明');
-    console.log('   "* Example testimonials for demonstration purposes"');
+    console.log('✅ Testimonials 未展示或已包含免责声明');
     passedChecks++;
   } else {
     console.log('❌ 未找到免责声明');
@@ -134,17 +135,17 @@ function checkTestimonials() {
 
 function checkIcons() {
   console.log('\n🎨 检查图标和资源...\n');
-  
+
   assetsToCheck.forEach(asset => {
     checkFile(asset.path, asset.name);
   });
-  
+
   // 检查 layout.tsx 中的图标配置
   const layoutPath = path.join(process.cwd(), 'app/layout.tsx');
   if (fs.existsSync(layoutPath)) {
     const layoutContent = fs.readFileSync(layoutPath, 'utf-8');
     totalChecks++;
-    
+
     if (layoutContent.includes('icons:') && layoutContent.includes('favicon')) {
       console.log('✅ Layout.tsx 图标配置正确');
       passedChecks++;

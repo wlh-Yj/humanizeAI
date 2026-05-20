@@ -15,29 +15,36 @@ import {
 } from "@/components/ui/select"
 
 const SAMPLE_TEXT = `Artificial intelligence has revolutionized the way we approach problem-solving in the modern era. The integration of machine learning algorithms into various industries has led to unprecedented advancements in efficiency and productivity. Furthermore, the development of natural language processing capabilities has enabled more intuitive human-computer interactions, facilitating seamless communication between users and AI systems.`
+const MAX_INPUT_CHARS = 20_000
+const modes = ["Standard", "GPTZero", "ZeroGPT", "Turnitin", "Academic"] as const
 
 interface HeroSectionProps {
-  initialMode?: string
   title?: string
+  initialMode?: (typeof modes)[number]
 }
 
-export function HeroSection({ initialMode = "GPTZero", title }: HeroSectionProps) {
+export function HeroSection({ title, initialMode = "GPTZero" }: HeroSectionProps) {
   const { t } = useI18n()
   const [inputText, setInputText] = useState("")
   const [outputText, setOutputText] = useState("")
   const [isProcessing, setIsProcessing] = useState(false)
-  const [mode, setMode] = useState(initialMode)
+  const [errorMessage, setErrorMessage] = useState("")
+  const [mode, setMode] = useState<(typeof modes)[number]>(initialMode)
   const [fluency, setFluency] = useState("High")
   const [readability, setReadability] = useState("University")
   const [undetectable, setUndetectable] = useState("Standard")
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const modes = ["GPTZero", "ZeroGPT", "Turnitin", "Academic"]
-
   const handleHumanize = useCallback(async () => {
     if (!inputText.trim()) return
+    if (inputText.length > MAX_INPUT_CHARS) {
+      setErrorMessage(`Please keep your text under ${MAX_INPUT_CHARS.toLocaleString()} characters.`)
+      return
+    }
+
     setIsProcessing(true)
     setOutputText("")
+    setErrorMessage("")
 
     try {
       const response = await fetch('/api/humanize', {
@@ -55,14 +62,18 @@ export function HeroSection({ initialMode = "GPTZero", title }: HeroSectionProps
       })
 
       if (!response.ok) {
-        throw new Error('Failed to humanize text')
+        const data = await response.json().catch(() => null)
+        throw new Error(data?.error || 'Failed to humanize text')
       }
 
       const data = await response.json()
+      const humanized = typeof data.humanizedText === "string" ? data.humanizedText : ""
 
-      // Simulate typing effect
+      if (!humanized) {
+        throw new Error("No humanized text was returned.")
+      }
+
       let i = 0
-      const humanized = data.humanizedText
       const interval = setInterval(() => {
         setOutputText(humanized.slice(0, i))
         i += 3
@@ -76,7 +87,7 @@ export function HeroSection({ initialMode = "GPTZero", title }: HeroSectionProps
     } catch (error) {
       console.error('Error humanizing text:', error)
       setIsProcessing(false)
-      // Ideally show a toast or error message here
+      setErrorMessage(error instanceof Error ? error.message : 'Failed to process text. Please try again.')
     }
   }, [inputText, mode, fluency, readability, undetectable])
 
@@ -92,12 +103,23 @@ export function HeroSection({ initialMode = "GPTZero", title }: HeroSectionProps
   const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
+
+    if (file.size > MAX_INPUT_CHARS * 4) {
+      setErrorMessage(`Please upload a smaller text file, under ${MAX_INPUT_CHARS.toLocaleString()} characters.`)
+      e.target.value = ""
+      return
+    }
+
     const reader = new FileReader()
     reader.onload = (ev) => {
       const result = ev.target?.result
       if (typeof result === "string") {
         setInputText(result)
+        setErrorMessage("")
       }
+    }
+    reader.onerror = () => {
+      setErrorMessage("Could not read that file. Please try a plain text file.")
     }
     reader.readAsText(file)
     e.target.value = ""
@@ -115,7 +137,9 @@ export function HeroSection({ initialMode = "GPTZero", title }: HeroSectionProps
       <div className="relative mx-auto max-w-7xl px-6">
         <div className="mx-auto mb-12 max-w-3xl text-center lg:mb-16">
           <h1 className="text-balance font-display text-4xl font-bold tracking-tight text-foreground md:text-5xl lg:text-6xl">
-            {title ? title : (
+            {title ? (
+              title
+            ) : (
               <>
                 {t("hero.title")}{" "}
                 <span className="bg-gradient-to-r from-primary to-[hsl(180_70%_40%)] bg-clip-text text-transparent">
@@ -236,7 +260,7 @@ export function HeroSection({ initialMode = "GPTZero", title }: HeroSectionProps
               <input
                 ref={fileInputRef}
                 type="file"
-                accept=".txt,.pdf,.doc,.docx"
+                accept=".txt,.md,text/plain,text/markdown"
                 onChange={handleFileUpload}
                 className="hidden"
                 aria-label="Upload file"
@@ -278,6 +302,13 @@ export function HeroSection({ initialMode = "GPTZero", title }: HeroSectionProps
                 </Button>
               </div>
             </div>
+            {errorMessage && (
+              <div className="border-t border-border px-5 py-3">
+                <p className="text-sm text-destructive" role="alert">
+                  {errorMessage}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Output Panel */}
